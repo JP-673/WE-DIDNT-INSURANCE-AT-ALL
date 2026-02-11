@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVE Chaos Deck - Visual Grid FIXED</title>
+    <title>EVE Chaos Deck - Protocolo de Vuelo</title>
     <style>
         :root {
             --eve-gold: #c3a067;
@@ -14,28 +14,60 @@
         body {
             background-color: var(--eve-bg);
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
         }
 
-        /* ESCENARIO PRINCIPAL */
-        .main-stage {
-            margin-bottom: 40px;
-            text-align: center;
+        /* DISEÑO PRINCIPAL (Layout) */
+        .game-layout {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 60px;
+            max-width: 1200px;
             width: 100%;
+            margin-bottom: 50px;
         }
 
+        /* PANEL IZQUIERDO */
+        .info-panel {
+            flex: 1;
+            max-width: 350px;
+            border-left: 2px solid var(--eve-gold);
+            padding-left: 25px;
+            margin-top: 20px;
+        }
+
+        .info-panel h2 {
+            color: var(--eve-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+        }
+
+        .info-panel p {
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .rule-box {
+            background: rgba(195, 160, 103, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        /* CARTA PRINCIPAL */
         .deck-container {
             perspective: 1000px;
             cursor: pointer;
-            width: 500px;
-            height: 750px;
-            margin: 0 auto;
+            /* Proporción vertical 2:3 */
+            width: 480px; 
+            height: 720px;
         }
 
         .card {
@@ -55,7 +87,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
             border: 2px solid var(--eve-gold);
         }
@@ -63,18 +95,16 @@
         .card-face-back {
             background: #111;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 30px #000;
+            box-shadow: inset 0 0 40px #000;
         }
 
         .card-face-back::after {
-            content: "SCANNING...";
+            content: "SCANNING SECTOR...";
             color: var(--eve-gold);
             font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 10px;
+            letter-spacing: 3px;
         }
 
         .card-face-front {
@@ -85,118 +115,130 @@
         .card-face-front img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; /* Mantiene tu diseño de PS intacto */
         }
 
+        /* BOTONES */
         .controls {
-            margin-top: 25px;
+            text-align: center;
+            margin-top: 20px;
         }
 
         button {
             background: transparent;
             border: 1px solid var(--eve-blue);
             color: var(--eve-blue);
-            padding: 12px 35px;
+            padding: 15px 40px;
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
-            transition: 0.2s;
+            letter-spacing: 2px;
+            transition: 0.3s;
         }
 
         button:hover {
             background: var(--eve-blue);
             color: white;
-            box-shadow: 0 0 15px var(--eve-blue);
+            box-shadow: 0 0 20px var(--eve-blue);
         }
 
-        /* SECCIÓN DEL GRID */
+        /* HISTORIAL GRID */
         .history-section {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             border-top: 1px solid #222;
-            padding-top: 30px;
-        }
-
-        .history-header {
-            color: var(--eve-gold);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-align: center;
+            padding-top: 40px;
         }
 
         .history-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 20px;
-            padding-bottom: 50px;
         }
 
         .grid-item {
             aspect-ratio: 2/3;
-            background: #000;
             border: 1px solid #333;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-            animation: fadeIn 0.4s ease-out;
+            transition: 0.2s;
         }
 
         .grid-item:hover {
-            transform: scale(1.05);
             border-color: var(--eve-blue);
-            z-index: 10;
+            transform: scale(1.05);
         }
 
         .grid-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.7;
-            transition: 0.3s;
+            opacity: 0.6;
         }
 
-        .grid-item:hover img {
-            opacity: 1;
+        /* RESPONSIVE */
+        @media (max-width: 1000px) {
+            .game-layout {
+                flex-direction: column-reverse;
+                align-items: center;
+            }
+            .info-panel {
+                border-left: none;
+                border-top: 2px solid var(--eve-gold);
+                padding-left: 0;
+                padding-top: 20px;
+                max-width: 100%;
+            }
+            .deck-container {
+                width: 90vw;
+                height: 135vw;
+            }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="main-stage">
-        <div class="deck-container" id="main-deck" onclick="flipCard()">
-            <div class="card" id="card">
-                <div class="card-face card-face-back">
-                    <div style="width: 40px; height: 40px; border: 2px solid var(--eve-gold); border-radius: 50%; border-top-color: transparent; animation: spin 2s linear infinite;"></div>
-                </div>
-                <div class="card-face card-face-front">
-                    <img src="1.png" id="card-img" alt="Main Card View">
-                </div>
+    <div class="game-layout">
+        <div class="info-panel">
+            <h2>Protocolo Chaos</h2>
+            <p>Este mazo contiene directivas obligatorias para pilotos con exceso de confianza y falta de sobriedad.</p>
+            
+            <div class="rule-box">
+                <p><strong>1. REAVEAL:</strong> CLICK A CARD TO REAVEAL THE DARE .</p>
+                <p><strong>2. CHECK:</strong> DO THE MISSION OR DRINK</p>
+                <p><strong>3. HISTORIAL:</strong> USED CARDS SHOW HERE</p>
             </div>
+            
+            <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.5;">
+                Seguridad de Seguros: 0.0<br>
+                Estado del Clon: Activo
+            </p>
         </div>
 
-        <div class="controls">
-            <button onclick="nextCard(event)">DRAW A NEW CARD</button>
+        <div class="main-stage">
+            <div class="deck-container" onclick="flipCard()">
+                <div class="card" id="card">
+                    <div class="card-face card-face-back"></div>
+                    <div class="card-face card-face-front">
+                        <img src="1.png" id="card-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button onclick="nextCard(event)">DRAW A NEW CARD</button>
+            </div>
         </div>
     </div>
 
     <div class="history-section">
-        <div class="history-header"> HISTORY OF CARDS</div>
+        <h3 style="color: var(--eve-gold); font-size: 0.8rem; letter-spacing: 2px;">HISTORY</h3>
         <div class="history-grid" id="history-grid"></div>
     </div>
 
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-
     <script>
-        // Asegúrate que los nombres de archivo sean exactos
+        // Lista de tus archivos
         const images = [
             '1.png', '2.png', '3.png', '4.png', 
             '5.png', '6.png', '7.png', '8.png', 
@@ -205,7 +247,7 @@
 
         let isFlipped = false;
         let currentIndex = 0;
-        const revealedCards = new Set(); // Para no duplicar en el grid
+        const revealedCards = new Set();
 
         const cardElement = document.getElementById('card');
         const cardImg = document.getElementById('card-img');
@@ -215,67 +257,48 @@
             isFlipped = !isFlipped;
             cardElement.classList.toggle('is-flipped', isFlipped);
             
-            // Si revelamos la carta por primera vez, la mandamos al grid
             if (isFlipped) {
                 addToGrid(images[currentIndex]);
             }
         }
 
         function nextCard(event) {
-            if(event) event.stopPropagation();
-            
-            // Cerrar la carta
+            event.stopPropagation();
             cardElement.classList.remove('is-flipped');
             isFlipped = false;
 
-            // Cambiar imagen tras breve espera
             setTimeout(() => {
                 let nextIndex;
                 do {
                     nextIndex = Math.floor(Math.random() * images.length);
-                } while (nextIndex === currentIndex && images.length > 1);
+                } while (nextIndex === currentIndex);
                 
                 currentIndex = nextIndex;
                 cardImg.src = images[currentIndex];
             }, 300);
         }
 
-        function addToGrid(imageSrc) {
-            // Si ya está en el grid, no la añadimos de nuevo
-            if (revealedCards.has(imageSrc)) return;
-
-            revealedCards.add(imageSrc);
+        function addToGrid(src) {
+            if (revealedCards.has(src)) return;
+            revealedCards.add(src);
 
             const div = document.createElement('div');
             div.className = 'grid-item';
-            div.title = "Hacer clic para ver en grande";
-            
-            const img = document.createElement('img');
-            img.src = imageSrc;
-            
-            div.appendChild(img);
-
-            // Funcionalidad extra: si clicas en el grid, se muestra arriba
             div.onclick = () => {
                 cardElement.classList.remove('is-flipped');
                 setTimeout(() => {
-                    cardImg.src = imageSrc;
-                    currentIndex = images.indexOf(imageSrc);
-                    // Pequeño delay para que se vea el cambio antes de girar
-                    setTimeout(() => {
-                        cardElement.classList.add('is-flipped');
-                        isFlipped = true;
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 100);
+                    cardImg.src = src;
+                    currentIndex = images.indexOf(src);
+                    setTimeout(() => { cardElement.classList.add('is-flipped'); isFlipped = true; }, 100);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }, 300);
             };
 
-            // Insertar al principio para que la más nueva salga primera
+            const img = document.createElement('img');
+            img.src = src;
+            div.appendChild(img);
             historyGrid.insertBefore(div, historyGrid.firstChild);
         }
     </script>
 </body>
-
 </html>
-
-
